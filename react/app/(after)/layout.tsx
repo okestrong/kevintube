@@ -21,7 +21,7 @@ const AfterLayout: NextPage = ({ children }: PropsWithChildren) => {
    const { restApi } = useContext(SenderContext)!;
 
    if (!me?.id) {
-      if (localStorage.getItem('atoken')) {
+      if (typeof window !== 'undefined' && localStorage.getItem('atoken')) {
          restApi
             .get(`/users/me`)
             .then(res => setMe(res.data))
