@@ -21,7 +21,7 @@ app:
   front-url: http://localhost:3000
   upload-dir: ${user.home}/upload
 jwt:
-  issuer: okestro/cmp/global
+  issuer: kevintube
   secret: 7YXhMJibqkI7YnFbbEaRJdjs8KG3FSKj
   access-time: 30 # mi
   refresh-time: 1 # week

@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+app:
+  upload-dir: /upload
+
+jwt:
+  access-time: 30 # mi
+  refresh-time: 1 # week
+
+logging:
+  level:
+    org.springframework.r2dbc.core: trace
+    io.r2dbc.postgresql.QUERY: trace
+    io.r2dbc.postgresql.PARAM: trace
+    org.hibernate.SQL: info
+    org.hibernate.orm.jdbc.bind: trace
