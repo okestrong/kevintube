@@ -69,9 +69,6 @@ const cmtEndRef = ref(null);
 const [q, id] = route.params.slug || [];
 const { $restApi } = useNuxtApp();
 
-console.log('id=', id);
-console.log('q=', q);
-
 if (!q) {
    throw createError({
       statusCode: 400,
@@ -92,7 +89,7 @@ const {
 } = useQuery<any>({
    queryKey: ['youtube', 'list', query.value],
    queryFn: () =>
-      useFetch(`/youtube/search/${!pageToken.value || datas.value.length === 0 ? 10 : 10}`, {
+      useFetch(`/youtube/search/${!pageToken.value || datas.value.length === 0 ? 20 : 10}`, {
          method: 'get',
          params: {
             q: query.value,
@@ -132,7 +129,6 @@ const {
    queryFn: ({ pageParam }) => useFetch(`/rest/comments/${id}?size=10&page=${pageParam || 0}`).then(res => res.data.value),
    initialPageParam: 0,
    getNextPageParam: (lastPage: any, pages) => {
-      console.log('lastPage=', lastPage);
       if (!lastPage) return undefined;
       const { skip, list, total } = lastPage;
       return skip + list.length < total ? pages.length : undefined;

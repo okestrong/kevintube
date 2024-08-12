@@ -36,7 +36,7 @@ const QueryPage: NextPage<Props> = ({ params }) => {
                params: {
                   q: query,
                   ...(!!pageToken && { pageToken }),
-                  maxResults: !pageToken || datas.length === 0 ? 10 : 10,
+                  maxResults: !pageToken || datas.length === 0 ? 20 : 10,
                },
             })
             .then(res => res.data)

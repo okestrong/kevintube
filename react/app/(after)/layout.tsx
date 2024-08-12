@@ -20,16 +20,18 @@ const AfterLayout: NextPage = ({ children }: PropsWithChildren) => {
    const { me, setMe } = useStore();
    const { restApi } = useContext(SenderContext)!;
 
-   if (!me?.id) {
-      if (typeof window !== 'undefined' && localStorage.getItem('atoken')) {
-         restApi
-            .get(`/users/me`)
-            .then(res => setMe(res.data))
-            .catch(showError);
-      } else {
-         router.push('/');
+   useEffect(() => {
+      if (!me?.id) {
+         if (typeof window !== 'undefined' && localStorage.getItem('atoken')) {
+            restApi
+               .get(`/users/me`)
+               .then(res => setMe(res.data))
+               .catch(showError);
+         } else {
+            router.push('/');
+         }
       }
-   }
+   }, [me]);
 
    return (
       <div className={twMerge('h-screen', pathname === '/home' && 'overflow-y-hidden')}>
