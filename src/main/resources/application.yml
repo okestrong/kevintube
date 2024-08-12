@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kevintube
+  r2dbc:
+    url: r2dbc:postgresql://hotk.co.kr:5432/kevintube
+    username: kevintube
+    password: ${env.DB_PWD}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: okestro.system@gmail.com
+    password: ENC(Dz5gG7plUXdNWI1UFKaAVzvtN5PfbpM6LoMiSJptcCk=)
+    properties:
+      mail.smtp.starttls.enable: true
+      mail.smtp.auth: true
+app:
+  front-url: http://localhost:3000
+  upload-dir: ${user.home}/upload
+jwt:
+  issuer: okestro/cmp/global
+  secret: 7YXhMJibqkI7YnFbbEaRJdjs8KG3FSKj
+  access-time: 30 # mi
+  refresh-time: 1 # week
+springdoc:  # http://localhost:8080/webjars/swagger-ui/index.html
+  cache:
+    disabled: true
+  swagger-ui:
+    operations-sorter: alpha
+logging:
+  level:
+    org.springframework.r2dbc.core: trace
+    io.r2dbc.postgresql.QUERY: trace
+    io.r2dbc.postgresql.PARAM: trace
+    org.hibernate.SQL: info
+    org.hibernate.orm.jdbc.bind: trace
