@@ -40,7 +40,7 @@ function RQProvider({ children }: RqProps) {
    return (
       <QueryClientProvider client={client}>
          {children}
-         <ReactQueryDevtools initialIsOpen={process.env.NODE_ENV === 'development'} />
+         <ReactQueryDevtools initialIsOpen={showDev} />
          {showDev && (
             <Suspense fallback={null}>
                <ReactQueryDevtoolsProduction />

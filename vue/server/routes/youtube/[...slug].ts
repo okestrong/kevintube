@@ -20,12 +20,9 @@ export default defineEventHandler(async event => {
    let params;
    switch (slugArr[0]) {
       case 'search':
-         /*if (isNaN(+slugArr[1])) {
-            throw createError({
-               statusCode: 400,
-               statusMessage: 'Bad Request (wrong slug[1])',
-            });
-         }*/
+         if (isNaN(+slugArr[1])) {
+            return;
+         }
          params = {
             part: 'snippet',
             maxResults: +slugArr[1],
@@ -59,5 +56,5 @@ export default defineEventHandler(async event => {
          console.log('e=', e.response);
          console.error(e);
       });
-   return response!.data;
+   return response?.data;
 });
