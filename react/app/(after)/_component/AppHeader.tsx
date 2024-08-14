@@ -7,14 +7,16 @@ import { useTheme } from 'next-themes';
 import { useStore } from '@/libs/store';
 import { usePathname, useRouter } from 'next/navigation';
 import gravatar from 'gravatar';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {}
 
 const AppHeader: FC<Props> = () => {
    const router = useRouter();
    const { systemTheme, theme, setTheme } = useTheme();
-   const { clearMe, me } = useStore();
+   const { clearMe, me, clearSearchDatas } = useStore();
    const pathname = usePathname();
+   const client = useQueryClient();
    const query = useMemo(() => {
       const paths = pathname.split('/');
       if (paths.length >= 4) {
@@ -36,7 +38,16 @@ const AppHeader: FC<Props> = () => {
       clearMe();
    }, []);
 
-   const onSearch = useCallback((term: string) => router.push(`/youtube/search/${term}`), [pathname]);
+   const onSearch = useCallback(
+      (term: string) => {
+         clearSearchDatas();
+         router.push(`/youtube/search/${term}`);
+         client.invalidateQueries({
+            queryKey: ['youtube', 'list', term],
+         });
+      },
+      [pathname],
+   );
 
    const gotoHome = useCallback(() => router.push('/home'), []);
 

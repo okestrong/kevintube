@@ -23,7 +23,7 @@ const AutoCompleteInput: FC<Props> = ({ autoFocus, containerClassname, defaultVa
    const options = useMemo(() => items?.filter(it => it.includes(term)) || [], [term, items]);
 
    useEffect(() => {
-      if (!!defaultValue && term !== defaultValue) {
+      if (defaultValue) {
          setTerm(defaultValue);
       }
    }, [defaultValue]);
@@ -37,6 +37,7 @@ const AutoCompleteInput: FC<Props> = ({ autoFocus, containerClassname, defaultVa
       (e: React.KeyboardEvent<HTMLInputElement>) => {
          if (e.key === 'Enter' && !!term) {
             e.preventDefault();
+            setShow(false);
             if (curIdx > -1) {
                const keyword = options[curIdx];
                addItem(keyword);
@@ -84,7 +85,7 @@ const AutoCompleteInput: FC<Props> = ({ autoFocus, containerClassname, defaultVa
       <div className={twMerge('w-full relative', containerClassname || '')}>
          <div
             className={twMerge(
-               'relative rounded-full w-2/3 translate-x-1/3 border border-neutral-400 py-4 px-2 dark:bg-neutral-700 transition-all duration-500',
+               'relative rounded-full w-2/3 translate-x-1/3 border border-neutral-400 py-4 px-2 dark:bg-neutral-700 transition-all',
                focused && 'shadow-neon w-full translate-x-0',
             )}
          >

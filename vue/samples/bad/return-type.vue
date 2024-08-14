@@ -12,5 +12,4 @@ const prom = Promise.resolve({
 
 type P = { message: string }; // 'hello' 를 123 으로 바꾸면 string 을 number 로 바꿔줘야 한다. 실수유발.
 const p: P = { message: 'hi' };
-console.log(p);
 </script>

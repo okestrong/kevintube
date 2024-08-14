@@ -15,3 +15,9 @@ export interface IComment {
    lev: number;
    step: number;
 }
+
+export interface InfinitePaging<T> {
+   skip: number;
+   list: T[];
+   total: number;
+}

@@ -12,5 +12,4 @@ const prom = Promise.resolve({
 
 type P = Awaited<typeof prom>;
 const p: P = { message: 'hi' }; // hello 를 123 으로 바꿔보자. 타입이 자동으로 number 로 바뀌어서 타입에러가 떠준다.
-console.log(p);
 </script>

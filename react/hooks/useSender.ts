@@ -37,8 +37,6 @@ export default function useSender({ baseURL, params, headers }: SenderProps) {
          },
          error => {
             const config = error.config;
-            console.log('error=', error);
-            console.log('error.response.data=', error.response.data);
             if (error.response && [401, 403].includes(error.response.status) && !config._retry) {
                if (!localStorage.getItem('rtoken')) {
                   localStorage.removeItem('atoken');

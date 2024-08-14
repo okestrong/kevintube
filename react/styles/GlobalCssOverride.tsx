@@ -4,6 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 import Colors from '@/libs/color';
 
 const GlobalCssOverride = createGlobalStyle`
+    /* Youtube Player */
     .youtube {
         overflow: hidden;
         padding-bottom: 56.25%;

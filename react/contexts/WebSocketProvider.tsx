@@ -23,14 +23,12 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
          console.error(err);
       };
       sk.onmessage = (e: MessageEvent) => {
-         console.log('e=', e);
          const videoId = e.data;
          client.invalidateQueries({
             queryKey: ['youtube', 'comments', videoId],
          });
       };
       setCmtSocket(sk);
-      console.log('WebsocketProvider, useEffect, sk = ', sk);
       /*return () => {
          cmtSocket?.close();
       };*/

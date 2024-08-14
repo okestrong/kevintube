@@ -116,7 +116,6 @@ const handleSearch = (keyword: string) => () => {
 const onBlur = () => setTimeout(() => (focused.value = false), 100);
 
 onClickOutside(clickAwayTarget, () => {
-   console.log('clieck outside');
    if (!focused.value) {
       show.value = false;
       curIdx.value = -1;
@@ -126,7 +125,6 @@ onClickOutside(clickAwayTarget, () => {
 watch(
    () => props.defaultValue,
    (newValue, oldValue) => {
-      console.log('newValue=', newValue);
       if (newValue && term.value !== newValue) term.value = newValue;
    },
 );

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.okestro.kevin.common.exception.ErrorResponse
 import com.okestro.kevin.config.jwt.JwtAuthConverter
 import com.okestro.kevin.config.jwt.JwtAuthenticationManager
-import com.okestro.kevin.user.domain.model.Role
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,8 +13,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
@@ -53,7 +50,6 @@ class SecurityConfig(
             .authorizeExchange {
                 it.pathMatchers("/api/signup", "/api/login", "/cmt").permitAll()
                     .pathMatchers(HttpMethod.GET, "/api/renew-token").permitAll()
-                    .pathMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
                     .anyExchange().authenticated()
             }
@@ -91,19 +87,9 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource =
         UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues().apply {
-                allowedOriginPatterns = listOf(frontUrl)
+                allowedOriginPatterns = listOf("*")
                 allowedMethods = listOf("*")
                 allowCredentials = false
             })
         }
-
-    @Bean
-    fun userDetailsService() =
-        MapReactiveUserDetailsService(
-            User.builder()
-                .username("kevin")
-                .password("okestro")
-                .roles(Role.ADMIN.name, Role.USER.name)
-                .build()
-        )
 }

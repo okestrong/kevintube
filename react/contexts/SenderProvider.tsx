@@ -13,7 +13,7 @@ export const SenderContext = createContext<Maybe<SenderProviderProps>>(null);
 
 export const SenderProvider = ({ children }: { children: ReactNode }) => {
    const youtubeApi = axios.create({
-      baseURL: 'https://www.googleapis.com/youtube/v3',
+      baseURL: '',
       params: {
          part: 'snippet',
          maxResults: 20,

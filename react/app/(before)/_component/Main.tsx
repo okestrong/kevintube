@@ -2,7 +2,7 @@
 
 import { FC, useEffect } from 'react';
 import Image from 'next/image';
-import Logo from '/public/images/cmp.png';
+import Logo from '@images/cmp.png';
 
 const Main: FC = () => {
    useEffect(() => {

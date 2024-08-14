@@ -5,6 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
+import { isArray } from 'lodash';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ko');
@@ -50,6 +51,17 @@ export const getPasswordStrength = (score: number): string => {
          return 'Great !';
       default:
          return '';
+   }
+};
+
+export const gotoNewPath = (path: string, type?: 'push' | 'replace') => {
+   if (typeof window === 'undefined') {
+      return;
+   }
+   if (!type || type === 'push') {
+      window.history.pushState(null, '', path);
+   } else {
+      window.history.replaceState(null, '', path);
    }
 };
 
@@ -204,31 +216,32 @@ export const showError = (e: AxiosError) => {
             errors.push(err[key]);
          }
       }
-   } /*else if ((e.response?.status === 500 || (e.response?.data as any)?.status === 500) && (e.response?.data as any)?.message) {
-      const data = e.response!.data as any;
-      console.log(data.message);
-   } else if ((e.response?.data as any)?.errorCode) {
-      const data = e.response!.data as any;
-      if (data.errorCode === 500) toast.error(`${data.errorCode}: ${data.message}`);
-      else console.log(`${data.errorCode}: ${data.message}`);
-   }*/ else if (e.message) {
+   } else if (e.message) {
       errors.push(e.message);
    } else if (typeof e.response?.data === 'string') {
       errors.push(e.response.data);
    } else {
       errors.push(defaultErrMessage);
    }
-   toast(
-      <div className="flex flex-col space-y-0.5">
-         {errors.map(error => (
-            <span key={error}>{error}</span>
-         ))}
-      </div>,
-   );
+   if (!!errors?.[0]) {
+      toast(
+         <div className="flex flex-col space-y-0.5">
+            {errors.map(error => (
+               <span key={error}>{error}</span>
+            ))}
+         </div>,
+      );
+   }
    return errors.reduce((acc, cur) => acc + '\n' + cur, '');
 };
 
 export const dateUtil = {
+   getDateFromArray: (timestamp: number[]) =>
+      new Date(
+         dayjs(`${timestamp[0]}-${timestamp[1]}-${timestamp[2]} ${timestamp[3]}:${timestamp[4]}:${timestamp[5]}`, 'YYYY-M-D H:m:s').format(
+            'YYYY-MM-DD HH:mm:ss',
+         ),
+      ),
    dateFormat: (timestamp: any, format?: string): string => {
       if (Array.isArray(timestamp) && timestamp.length === 7) {
          return dayjs(`${timestamp[0]}-${timestamp[1]}-${timestamp[2]} ${timestamp[3]}:${timestamp[4]}:${timestamp[5]}`, format || 'YYYY-M-D H:m:s').format(
@@ -238,7 +251,7 @@ export const dateUtil = {
       return dayjs(timestamp).format(format || 'YYYY-MM-DD a H시 m분');
    },
    dateFormatFromNow: (timestamp: Date, format?: string): string => {
-      let date = new Date(timestamp);
+      let date = isArray(timestamp) ? dateUtil.getDateFromArray(timestamp) : new Date(timestamp);
       const now = new Date();
       if (dateUtil.dateDiff(now, date, 'day') < 30) {
          return dayjs(date).fromNow();

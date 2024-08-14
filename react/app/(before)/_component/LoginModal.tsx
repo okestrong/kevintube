@@ -9,13 +9,12 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import LogoWide from '/public/images/logo_wide.png';
-import AboutImg from '/public/images/cmp.png';
-import LogoImg from '/public/images/logo_white.png';
-import LogoWideDark from '/public/images/logo_wide_white.png';
+import LogoWide from '@images/logo_wide.png';
+import AboutImg from '@images/cmp.png';
+import LogoImg from '@images/logo_white.png';
+import LogoWideDark from '@images/logo_wide_white.png';
 import { AnimatePresence, motion } from 'framer-motion';
 import { GlobalContext } from '@/contexts/GlobalProvider';
-import { SenderContext } from '@/contexts/SenderProvider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import FormRow from '@/components/common/form/FormRow';
 import MuiTextField from '@/components/common/form/MuiTextField';
@@ -25,6 +24,8 @@ import { twMerge } from 'tailwind-merge';
 import { useStore } from '@/libs/store';
 import { saveToken } from '@/libs/utils';
 import { Icon } from '@iconify-icon/react';
+import tokenApi from '@/libs/tokenApi';
+import Colors from '@/libs/color';
 
 interface LoginModalProps {
    open: boolean;
@@ -34,7 +35,6 @@ interface LoginModalProps {
 const LoginModal: FC<LoginModalProps> = ({ open, setOpen }) => {
    const router = useRouter();
    const { isDark } = useContext(GlobalContext)!;
-   const { restApi } = useContext(SenderContext)!;
    const { setMe } = useStore();
 
    const FormSchema = useMemo(
@@ -57,17 +57,15 @@ const LoginModal: FC<LoginModalProps> = ({ open, setOpen }) => {
 
    const { mutate: login, isPending } = useMutation({
       mutationKey: ['login'],
-      mutationFn: (model: FieldValues) => restApi.post(`login`, model),
+      mutationFn: (model: FieldValues) => tokenApi.post('/login', model),
       onSuccess: res => {
          if (res.status === 200) {
-            console.log('login success! res.data=', res.data);
             saveToken(res);
             setMe(res.data);
             router.push('/home');
          }
       },
       onError: (error: AxiosError) => {
-         console.error(error);
          const res = error.response?.data as any;
          if (res && 'message' in res) {
             toast(res.message);
@@ -139,18 +137,14 @@ const LoginModal: FC<LoginModalProps> = ({ open, setOpen }) => {
                            </FormRow>
                            <button
                               type="submit"
-                              className="py-[14px] border-2 border-indigo-600 text-white w-full rounded-sm font-bold hover:bg-orange-500 bg-indigo-500 transition-all"
+                              className="flex items-center justify-center py-[14px] border-2 border-indigo-600 text-white w-full rounded-sm font-bold hover:bg-orange-500 bg-indigo-500 transition-all"
                            >
                               {isPending ? (
-                                 <RotatingLines visible width="16" animationDuration="0.75" strokeWidth="4" />
+                                 <RotatingLines visible width="20" animationDuration="0.75" strokeWidth="4" strokeColor={Colors.white} />
                               ) : (
                                  <span className="text-2xl font-medium">LOGIN</span>
                               )}
                            </button>
-                           {/*<div className="h-5 w-1" />
-                           <TextDivider label="또는" classnames="text-neutral-400 font-dohyun text-lg" />
-                           <div className="h-0.5" />
-                           <div className="w-full text-left pl-4 text-xs">Login with</div>*/}
                         </motion.form>
                      )}
                   </AnimatePresence>

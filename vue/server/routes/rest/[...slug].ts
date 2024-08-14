@@ -20,9 +20,6 @@ export default defineEventHandler(async event => {
    }
 
    const slugArr: string[] = slug!.split('/');
-   console.log('rest slugArr=', slugArr);
-   console.log('rest params=', getQuery(event));
-   console.log('rest headers=', getHeaders(event));
 
    let res: AxiosResponse;
    switch (slugArr[0]) {
@@ -35,7 +32,7 @@ export default defineEventHandler(async event => {
          const token = getQuery(event);
          res = await instance.get(`/renew-token`, {
             params: {
-               refreshToken: token,
+               ...getQuery(event),
             },
          });
          return res.data;

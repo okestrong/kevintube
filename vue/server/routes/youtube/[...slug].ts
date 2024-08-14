@@ -52,9 +52,6 @@ export default defineEventHandler(async event => {
       .get(`https://www.googleapis.com/youtube/v3/${slugArr[0]}`, {
          params,
       })
-      .catch(e => {
-         console.log('e=', e.response);
-         console.error(e);
-      });
+      .catch(e => console.error(e));
    return response?.data;
 });

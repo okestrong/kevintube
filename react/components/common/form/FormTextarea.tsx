@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, forwardRef, useContext, useEffect, useState } from 'react';
 import { Controller, UseFormSetValue } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { GlobalContext } from '@/contexts/GlobalProvider';
@@ -18,7 +18,7 @@ interface FormInputProps {
    [key: string]: any;
 }
 
-const FormTextarea: FC<FormInputProps> = ({ minRows, mode, name, control, value, setValue, classnames, flexItems, ...rest }) => {
+const FormTextarea = forwardRef<any, FormInputProps>(({ minRows, mode, name, control, value, setValue, classnames, flexItems, ...rest }, ref) => {
    const { isDark } = useContext(GlobalContext)!;
 
    useEffect(() => {
@@ -44,6 +44,7 @@ const FormTextarea: FC<FormInputProps> = ({ minRows, mode, name, control, value,
                         props.field.onChange(e);
                      }}
                      {...rest}
+                     ref={ref}
                   />
                )}
                name={name}
@@ -58,6 +59,6 @@ const FormTextarea: FC<FormInputProps> = ({ minRows, mode, name, control, value,
          `}</style>
       </FormView>
    );
-};
+});
 
 export default FormTextarea;

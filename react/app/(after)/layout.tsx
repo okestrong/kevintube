@@ -13,25 +13,29 @@ import AppHeader from '@/app/(after)/_component/AppHeader';
 import HomeHeader from '@/app/(after)/_component/HomeHeader';
 import { twMerge } from 'tailwind-merge';
 import { SenderContext } from '@/contexts/SenderProvider';
+import tokenApi from '@/libs/tokenApi';
 
 const AfterLayout: NextPage = ({ children }: PropsWithChildren) => {
    const pathname = usePathname();
    const router = useRouter();
-   const { me, setMe } = useStore();
-   const { restApi } = useContext(SenderContext)!;
+   const { isAuthenticated, setMe, clearSearchDatas } = useStore();
+
+   if (!isAuthenticated) {
+      if (typeof window !== 'undefined' && localStorage.getItem('atoken')) {
+         tokenApi
+            .get(`/me`)
+            .then(res => setMe(res.data))
+            .catch(showError);
+      } else {
+         router.push('/');
+      }
+   }
 
    useEffect(() => {
-      if (!me?.id) {
-         if (typeof window !== 'undefined' && localStorage.getItem('atoken')) {
-            restApi
-               .get(`/users/me`)
-               .then(res => setMe(res.data))
-               .catch(showError);
-         } else {
-            router.push('/');
-         }
+      if (pathname === '/home') {
+         clearSearchDatas();
       }
-   }, [me]);
+   }, [pathname]);
 
    return (
       <div className={twMerge('h-screen', pathname === '/home' && 'overflow-y-hidden')}>

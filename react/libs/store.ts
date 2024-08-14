@@ -11,16 +11,43 @@ interface StoreProps {
    me?: IUser;
    parentId: number;
    setParentId: (id: number) => void;
+   lastSearchDatas: { [key: string]: any[] };
+   deleteLastSearchData: (key: string) => void;
+   clearSearchDatas: () => void;
+   addSearchData: (key: string, data: any) => void;
+   searchLock: boolean;
+   setSearchLock: (flag: boolean) => void;
 }
 
-export const useStore = create<StoreProps>()(set => ({
-   isAuthenticated: false,
-   setMe: (me: IUser) => set(_ => ({ me, isAuthenticated: !!me?.id })),
-   clearMe: () => set(_ => ({ me: undefined })),
-   me: undefined,
-   parentId: 0,
-   setParentId: (id: number) => set(_ => ({ parentId: id })),
-}));
+export const useStore = create<StoreProps>()(
+   persist(
+      set => ({
+         isAuthenticated: false,
+         setMe: (me: IUser) => set(_ => ({ me, isAuthenticated: !!me?.id })),
+         clearMe: () => set(_ => ({ me: undefined, isAuthenticated: false })),
+         me: undefined,
+         parentId: 0,
+         setParentId: (id: number) => set(_ => ({ parentId: id })),
+         lastSearchDatas: {},
+         deleteLastSearchData: (key: string) =>
+            set(state => {
+               delete state.lastSearchDatas[key];
+               return state.lastSearchDatas;
+            }),
+         clearSearchDatas: () => set(_ => ({ lastSearchDatas: {} })),
+         addSearchData: (key: string, data: any) =>
+            set(stt => ({
+               lastSearchDatas: { ...stt.lastSearchDatas, [key]: stt.searchLock ? stt.lastSearchDatas[key] : (stt.lastSearchDatas[key] || []).concat(data) },
+            })),
+         searchLock: false,
+         setSearchLock: (flag: boolean) => set(_ => ({ searchLock: flag })),
+      }),
+      {
+         name: 'session-storage',
+         storage: createJSONStorage(() => sessionStorage),
+      },
+   ),
+);
 
 interface PersistProps {
    remember?: IRemember;

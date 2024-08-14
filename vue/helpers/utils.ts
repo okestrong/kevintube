@@ -120,11 +120,8 @@ export const showError = (e: any) => {
    const defaultErrMessage = `${e.response?.status || '[Unknown]'} : 처리중 오류가 발생했습니다`;
    const errors: string[] = [];
    let err = e.response?.data as any;
-   console.log('err = ', err);
    if (typeof err === 'object') {
       for (const key of Object.keys(err)) {
-         console.log('key=', key);
-         console.log('err[key] = ', err[key]);
          if (err[key] && typeof err[key] !== 'object' && String(err[key]).length > 0) {
             errors.push(err[key]);
          }
